@@ -7,6 +7,7 @@ Imports physics citation graph
 """
 
 from proj1 import *
+from random import *
 import matplotlib.pyplot as plt
 
 ###################################
@@ -23,8 +24,9 @@ def load_graph():
     graph_text = graph_file.read()
     graph_lines = graph_text.split('\n')
     graph_lines = graph_lines[ : -1]
+    num_edges = 0
     
-    #print "Loaded graph with", len(graph_lines), "nodes"
+    print "Loaded graph with", len(graph_lines), "nodes"
     
     answer_graph = {}
     for line in graph_lines:
@@ -33,23 +35,70 @@ def load_graph():
         answer_graph[node] = set([])
         for neighbor in neighbors[1 : -1]:
             answer_graph[node].add(int(neighbor))
+            num_edges+=1
+
+    print "Loaded graph with", num_edges, "edges"
 
     return answer_graph
 
+def plot_in_degree_dist (graph) :
+   x = []
+   y = []
+   
+   for key in graph :
+      x.append(key)
+      y.append(graph[key])
+
+   # if there are nodes with 0 in degree, dont include them in the plot since log(0) = -inf
+   if x[0] == 0 :
+      x = x[1:]
+      y = y[1:]
+
+   plt.plot (x[1:], y[1:], 'ro')
+   plt.xscale('log')
+   plt.yscale('log')
+   plt.xlabel("in degrees (log scale)")
+   plt.ylabel("number of nodes (log scale)")
+   plt.show()
+
+def plot_in_degree_dist_lin (graph) :
+   x = []
+   y = []
+   
+   for key in graph :
+      x.append(key)
+      y.append(graph[key])
+
+   plt.plot (x, y, 'ro')
+   plt.xlabel("in degrees")
+   plt.ylabel("number of nodes")
+   plt.show()
+
+def make_random_graph (num_nodes, p) :
+   """
+   this function creates a random directed graph with num_nodes nodes. num_nodes >= 2.
+   p is the probability with which any 2 nodes are connected by an edge. 0 <= p < 1
+   """
+   rand_graph = {}
+   for node in range (num_nodes) :
+      rand_graph[node] = set([])
+
+   for node1 in rand_graph :
+      for node2 in rand_graph :
+         if node1 == node2 :
+            continue
+
+         rand_num = random ()
+         if rand_num < p :
+            rand_graph[node1].add(node2)
+
+   return rand_graph
+
+
 citation_graph = load_graph()
-
 in_degree_dist = in_degree_distribution (citation_graph)
+# plot_in_degree_dist (in_degree_dist)
 
-print (in_degree_dist)
-
-x = []
-y = []
-
-for key in in_degree_dist :
-   x.append(key)
-   y.append(in_degree_dist[key])
-
-plt.plot (x, y, 'ro')
-plt.xscale('log')
-plt.yscale('log')
-plt.show()
+rand_graph = make_random_graph (1000, 0.7)
+rand_graph_in_degree_dist = in_degree_distribution (rand_graph)
+plot_in_degree_dist_lin (rand_graph_in_degree_dist)
