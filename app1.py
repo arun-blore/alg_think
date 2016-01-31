@@ -8,6 +8,7 @@ Imports physics citation graph
 
 from proj1 import *
 from random import *
+from DPATrial import *
 import matplotlib.pyplot as plt
 
 ###################################
@@ -26,7 +27,7 @@ def load_graph():
     graph_lines = graph_lines[ : -1]
     num_edges = 0
     
-    print "Loaded graph with", len(graph_lines), "nodes"
+    # print "Loaded graph with", len(graph_lines), "nodes"
     
     answer_graph = {}
     for line in graph_lines:
@@ -37,7 +38,7 @@ def load_graph():
             answer_graph[node].add(int(neighbor))
             num_edges+=1
 
-    print "Loaded graph with", num_edges, "edges"
+    # print "Loaded graph with", num_edges, "edges"
 
     return answer_graph
 
@@ -94,11 +95,29 @@ def make_random_graph (num_nodes, p) :
 
    return rand_graph
 
+def make_dpa_graph (n, m) :
+   """
+   makes a dpa graph - as mentioned in Q3 of app1 question. n is the number of nodes in the graph.
+   m is (roughly) the number of nodes to which each node is connected
+   m <= n
+   n > 0
+   """
 
-citation_graph = load_graph()
-in_degree_dist = in_degree_distribution (citation_graph)
+   # start by creating a complete graph of m nodes
+   graph = make_complete_graph (m)
+
+   dpa_obj = DPATrial (m)
+
+   for ind in range (m, n) :
+      graph[ind] = dpa_obj.run_trial (m)
+
+   return graph
+
+
+#citation_graph = load_graph()
+#in_degree_dist = in_degree_distribution (citation_graph)
 # plot_in_degree_dist (in_degree_dist)
 
-rand_graph = make_random_graph (1000, 0.7)
-rand_graph_in_degree_dist = in_degree_distribution (rand_graph)
-plot_in_degree_dist_lin (rand_graph_in_degree_dist)
+#rand_graph = make_random_graph (1000, 0.7)
+#rand_graph_in_degree_dist = in_degree_distribution (rand_graph)
+#plot_in_degree_dist_lin (rand_graph_in_degree_dist)
