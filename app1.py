@@ -121,3 +121,9 @@ def make_dpa_graph (n, m) :
 #rand_graph = make_random_graph (1000, 0.7)
 #rand_graph_in_degree_dist = in_degree_distribution (rand_graph)
 #plot_in_degree_dist_lin (rand_graph_in_degree_dist)
+
+n = 27770
+m = 13
+dpa_graph = make_dpa_graph (n, m)
+in_deg_dist_dpa = in_degree_distribution (dpa_graph)
+plot_in_degree_dist (in_deg_dist_dpa)
